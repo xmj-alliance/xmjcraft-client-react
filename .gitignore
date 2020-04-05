@@ -25,3 +25,4 @@ yarn-error.log*
 # Site Specific
 package-*.json
 *.lock
+vscode/**
