@@ -9,7 +9,6 @@ const useHashLocation = () => {
   const [loc, setLoc] = useState(currentLocation());
 
   useEffect(() => {
-    console.log(`useEffect`);
     
     const handler = () => setLoc(currentLocation());
 

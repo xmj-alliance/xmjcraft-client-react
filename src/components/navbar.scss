@@ -1,0 +1,46 @@
+@import "src/theme";
+
+div.Navbar {
+  display: flex;
+  height: 4em;
+  background-color: $primary;
+  ul {
+    display: flex;
+  }
+  li {
+    margin: 0 1em;
+  }
+
+  a {
+    color: $back;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+  }
+
+  header.navbar {
+    a {
+      padding: 0.3em;
+      font-size: 2em;
+    }
+  }
+
+  main.navbar {
+    display: flex;
+    align-items: center;
+    a {
+      font-size: 1.2em;
+    }
+  }
+
+  footer.navbar {
+    display: flex;
+    align-items: center;
+    a {
+      font-size: 1.2em;
+    }
+  }
+
+
+}
