@@ -1,33 +1,52 @@
 import React from "react";
-
+import { loader } from "graphql.macro";
+import { useQuery } from "@apollo/client";
 import { Link } from "wouter";
+
+import User from "../../models/user";
 
 import "./list.scss";
 
-interface User {
-  dbname: string,
-  name: string
-}
 
-const users: User[] = [
-  {
-    dbname: "user-ngBiter",
-    name: "Jian jiaojiao"
-  },
-  {
-    dbname: "user-cmxmm",
-    name: "Kitten super-adorable"
+// const users: User[] = [
+//   {
+//     dbname: "user-ngBiter",
+//     name: "Jian jiaojiao"
+//   },
+//   {
+//     dbname: "user-cmxmm",
+//     name: "Kitten super-adorable"
+//   }
+// ];
+
+const queryDefs = loader("../../services/user.query.graphql");
+
+
+const PlaceUsers = () => {
+
+  const { loading, error, data } = useQuery(queryDefs);
+
+  if (loading) return (
+    <li><p>Loading...</p></li>
+  );
+
+  if (error || data === undefined){
+    console.error(error);
+    return (
+      <li><p>Error!!!</p></li>
+    );
   }
-];
 
-const placeUsers = () => {
-  return users.map((user) => (
-      <li key={user.dbname}>
+  return (data.users as User[]).map(({name, dbname}) => (
+      <li key={dbname}>
         <div className="userbox">
-          <Link href={`/users/${user.dbname}`} >
-            <h2>{user.name}</h2>
-            <p><small>{user.dbname}</small></p>
+          <Link href={`/users/${dbname}`} >
+            <h2>{name}</h2>
+            <p><small>{dbname}</small></p>
           </Link>
+          <footer>
+            <button>(-) Delete</button>
+          </footer>
         </div>
       </li>
     )
@@ -38,7 +57,7 @@ const UserList = () => {
   return (
     <div className="UserList">
       <ul>
-        { placeUsers() }
+        { PlaceUsers() }
       </ul>
     </div>
   );

@@ -1,6 +1,23 @@
+@import "src/theme";
+
 section.UserList {
   h1 {
     margin: 1em;
     font-size: 2em;
+  }
+  .users {
+    display: flex;
+  }
+  .create {
+    display: flex;
+    align-items: center;
+    padding: 1em;
+    margin: 1em;
+    button {
+      cursor: pointer;
+      color: $primary;
+      border: 3px solid $primary;
+      background-color: $back;
+    }
   }
 }

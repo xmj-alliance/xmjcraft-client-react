@@ -1,13 +1,11 @@
 import React from "react";
-import Users from "../services/userGraph";
 
 const HomeView = () => {
   return (
     <section className="Home">
       Welcome to xmjcraft-client-react!
       <div>
-       hacks:
-        {Users()}
+        It is currently 8:88
       </div>
     </section>
   );
