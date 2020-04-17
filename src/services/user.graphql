@@ -1,0 +1,8 @@
+query getUsers($condition: JSONObject, $options: JSONObject)
+{
+  users: users(condition: $condition, options: $options)
+  {
+    dbname,
+    name
+  }
+}
