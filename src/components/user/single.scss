@@ -1,0 +1,11 @@
+div.userSingle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  article {
+    margin: 2em;
+    h3 {
+      text-align: right;
+    }
+  }
+}

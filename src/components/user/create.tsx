@@ -8,7 +8,6 @@ import User from "../../models/user";
 import "./create.scss";
 
 const addDefs = loader("../../services/userGraph/addSingle.graphql");
-const getSingleDefs = loader("../../services/userGraph/getSingle.graphql");
 const getListDefs = loader("../../services/userGraph/getList.graphql");
 
 

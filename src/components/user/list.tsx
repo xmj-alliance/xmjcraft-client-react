@@ -19,12 +19,12 @@ import "./list.scss";
 //   }
 // ];
 
-const queryDefs = loader("../../services/user.query.graphql");
+const getListDefs = loader("../../services/userGraph/getList.graphql");
 
 
 const PlaceUsers = () => {
 
-  const { loading, error, data } = useQuery(queryDefs);
+  const { loading, error, data } = useQuery(getListDefs);
 
   if (loading) return (
     <li><p>Loading...</p></li>

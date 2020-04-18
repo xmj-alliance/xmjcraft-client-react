@@ -1,5 +1,6 @@
 query getUser($dbname: String, $options: JSONObject) {
   user: user(dbname: $dbname, options: $options) {
+    dbname,
     name
   }
 }
