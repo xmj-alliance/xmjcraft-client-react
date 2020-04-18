@@ -8,7 +8,7 @@ import User from "../../models/user";
 
 const getSingleDefs = loader("../../services/userGraph/getSingle.graphql");
 
-const PlaceUser = (dbname: string) => {
+const PlaceUser = (dbname?: string) => {
 
   // get user data
   const { loading, error, data } = useQuery(
@@ -33,39 +33,45 @@ const PlaceUser = (dbname: string) => {
 
   const user = data.user as User;
 
+  if (!user.dbname) {
+    // when this user does not exist
+    return (
+      <article>
+        <h2>Mr. Stranger</h2>
+        <h3>Error-no-such-user</h3>
+      </article>
+    );
+  }
+
   return (
     <article>
-      <h2>{user.name || "Mr. Stranger"}</h2>
-      <h3>{user.dbname || "Error-no-such-user"}</h3>
+      <header>
+        <button>Edit</button>
+        <button className="danger">Delete</button>
+      </header>
+      <h2>{user.name}</h2>
+      <h3>{user.dbname}</h3>
     </article>
   );
 };
 
 const UserDetail = () => {
 
-  // eslint-disable-next-line
-  const [_, params] = useRoute("/users/:id");
+  const params = useRoute("/users/:dbname")[1];
   
-  // params.id is the name that gets the value, no matter what the string after ":" is.
-  let dbname: string = params.id;
-
-  if (!dbname) {
-    console.log(`params.id is ${dbname}`);
-    
-    return (
-      <div className="UserDetail userSingle">
-        <h2 className="error">We are having trouble loading this user.</h2>
-      </div>
-    )
-  }
+  let dbname = params?.dbname;
 
   return (
     <div className="UserDetail userSingle">
       {
+        // I will skip checking whether dbname is undefined.
+        // If I write a condition here, the React hook will stop working. 
+        // You can google "Rendered fewer hooks than expected" error.
         PlaceUser(dbname)
       }
     </div>
   );
+  
 }
 
 export default UserDetail;
