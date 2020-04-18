@@ -1,0 +1,5 @@
+mutation deleteUser($dbname: String!) {
+  deleteUser(dbname: $dbname) {
+    message, numAffected, ok 
+  } 
+}

@@ -1,0 +1,5 @@
+mutation deleteUsers($condition: JSONObject!) {
+  deleteUsers(condition: $condition) {
+    message, numAffected, ok 
+  } 
+}

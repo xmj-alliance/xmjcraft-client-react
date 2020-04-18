@@ -1,0 +1,5 @@
+mutation updateUsers($condition: JSONObject!, $token: JSONObject!) {
+  updateUsers(condition: $condition, token: $token) {
+    message, numAffected, ok 
+  } 
+}

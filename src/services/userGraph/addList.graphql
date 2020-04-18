@@ -1,0 +1,5 @@
+mutation addUsers($newUsers: [UserView]!) {
+  addUsers(input: $newUsers) {
+    message, numAffected, ok 
+  }
+} 

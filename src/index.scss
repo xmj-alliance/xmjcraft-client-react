@@ -15,6 +15,14 @@ code {
     monospace;
 }
 
+.hidden {
+  display: none;
+}
+
+.invisible {
+  opacity: 0;
+}
+
 .flexSpacer {
   flex-grow: 1;
 }

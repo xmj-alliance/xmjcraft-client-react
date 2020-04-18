@@ -1,0 +1,5 @@
+mutation updateUser($dbname: String!, $token: JSONObject!) {
+  updateUser(dbname: $dbname, token: $token) {
+    message, numAffected, ok 
+  } 
+}

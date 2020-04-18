@@ -7,17 +7,6 @@ section.UserList {
   }
   .users {
     display: flex;
-  }
-  .create {
-    display: flex;
-    align-items: center;
-    padding: 1em;
-    margin: 1em;
-    button {
-      cursor: pointer;
-      color: $primary;
-      border: 3px solid $primary;
-      background-color: $back;
-    }
+    flex-wrap: wrap;
   }
 }
