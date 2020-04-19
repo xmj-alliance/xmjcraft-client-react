@@ -44,9 +44,6 @@ const PlaceUsers = () => {
             <h2>{name}</h2>
             <p><small>{dbname}</small></p>
           </Link>
-          <footer>
-            <button>(-) Delete</button>
-          </footer>
         </div>
       </li>
     )

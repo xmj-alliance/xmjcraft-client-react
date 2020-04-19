@@ -38,3 +38,35 @@ a {
   color: $primary;
   text-decoration: none;
 }
+
+button {
+  cursor: pointer;
+  color: $primary;
+  border: 3px solid $primary;
+  background-color: $back;
+  margin: 1em;
+  padding: 1em;
+}
+
+button.danger {
+  color: $error;
+  border-color: $error;
+  background-color: $back;
+}
+
+button.success {
+  color: $success;
+  border-color:$success;
+  background-color: $back;
+}
+
+.textInputGroup {
+  display: flex;
+  flex-direction: column;
+  label {
+    margin: 1em 0;
+  }
+  input[type=text] {
+    padding: 0.6em;
+  }
+}

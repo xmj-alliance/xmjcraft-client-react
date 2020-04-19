@@ -1,0 +1,21 @@
+@import "src/theme";
+
+section.UserDetail {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+  > header {
+    margin-top: 2em;
+  }
+
+  .editImaginedModalDialog {
+    border: 3px solid $primary;
+    h1 {
+      text-align: center;
+    }
+    
+  }
+
+}

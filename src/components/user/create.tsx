@@ -84,11 +84,11 @@ const UserCreate = () => {
 
           (<div className="newUser">
             <form onSubmit={onNewUserSubmit}>
-              <div>
+              <div className="textInputGroup">
                 <label htmlFor="newUserDBName">dbname</label>
                 <input type="text" id="newUserDBName" value={newUser.dbname} onChange={onNewUserDBNameChange} />
               </div>
-              <div>
+              <div className="textInputGroup">
                 <label htmlFor="newUserName">Name</label>
                 <input type="text" id="newUserName" value={newUser.name} onChange={onNewUserNameChange} />
               </div>

@@ -1,7 +1,13 @@
+@import "src/theme";
+
 div.userSingle {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  > footer {
+    margin-top: 2em;
+  }
   article {
     margin: 2em;
     h3 {
