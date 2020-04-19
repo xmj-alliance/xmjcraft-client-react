@@ -10,6 +10,7 @@ import { useRoute } from "wouter";
 
 const updateSingleDefs = loader("../../services/userGraph/updateSingle.graphql");
 const getSingleDefs = loader("../../services/userGraph/getSingle.graphql");
+const getListDefs = loader("../../services/userGraph/getList.graphql");
 
 const UserEdit = () => {
 
@@ -62,17 +63,43 @@ const UserEdit = () => {
 
         // update getList cache
 
-        // ...
+        let cacheResponse: {users: User[]} | null = null;
+
+        try {
+          cacheResponse = cache.readQuery({ query: getListDefs });
+        } catch (error) {
+          console.log(error);
+        }
+
+        if (!cacheResponse) {
+          return;
+        }
+
+        let userInCacheIndex = cacheResponse.users.findIndex(u => u.dbname === localUser.dbname);
+
+        if (userInCacheIndex < 0) {
+          return;
+        }
+
+        const newUsers = cacheResponse.users.slice();
+        
+        const newData = {
+          users: newUsers
+        }
+
+        cache.writeQuery({
+          query: getListDefs,
+          data: newData,
+        });
 
       }
     }
   );
 
-  const onOkayClick = (e: any) => {
+  const onOkayClick = async (e: any) => {
     e.preventDefault();
-    console.log(updateToken);
     // update this user
-    updateUser({
+    await updateUser({
       variables: {
         dbname: localUser.dbname,
         token: updateToken
@@ -101,7 +128,8 @@ const UserEdit = () => {
 
       <main>
       {
-        localUser.dbname?
+        localUser && localUser.dbname?
+
         <form>
           <article>
             <h3>Enter new info for {localUser.dbname}</h3>

@@ -18,7 +18,7 @@ const UserCreate = () => {
 
   const [isAddDialogShown, setIsAddDialogShown] = useState(false);
 
-  const [addUser, { loading: mutationLoading, error: mutationError }] = useMutation(
+  const [addUser, { loading: isAddExecuting, error: addError }] = useMutation(
     addDefs,
     {
       update: (cache, response) => {
@@ -58,15 +58,20 @@ const UserCreate = () => {
     setNewUser({...newUser, name: e.target.value || ""});
   }
 
-  const onNewUserSubmit = (e: FormEvent) => {
+  const onNewUserSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     // create new user
-    addUser({variables: {
+    await addUser({variables: {
       newUser: newUser
     }});
 
-    setNewUser({dbname: "", name: ""});
+    if (addError) {
+      console.error(addError);
+    } else {
+      console.log(`add success`);
+      setNewUser({dbname: "", name: ""});
+    }
 
   }
 
@@ -99,8 +104,12 @@ const UserCreate = () => {
           null
       }
 
-        {mutationLoading && <p>mutationLoading...</p>}
-        {mutationError && <p>mutationError :( Please try again</p>}
+      <footer>
+        <div className="info">
+          {isAddExecuting?<h2>Adding...</h2>:null}
+          {addError?<h2>Failed to add.</h2>:null}
+        </div>
+      </footer>
 
     </div>
   );
