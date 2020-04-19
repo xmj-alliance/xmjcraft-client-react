@@ -3,18 +3,38 @@ import React, { useState } from "react";
 import User from "../../models/user";
 import "./single.scss";
 import "./edit.scss";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { loader } from "graphql.macro";
 import CUDMessage from "../../models/cudMessage";
-
-interface UserEditProps {
-  user: User
-}
+import { useRoute } from "wouter";
 
 const updateSingleDefs = loader("../../services/userGraph/updateSingle.graphql");
 const getSingleDefs = loader("../../services/userGraph/getSingle.graphql");
 
-const UserEdit = ({user}: UserEditProps) => {
+const UserEdit = () => {
+
+  const params = useRoute("/users/:dbname")[1];
+
+  // get user data
+    // I will skip checking whether dbname is undefined.
+    // If I write a condition here, the React hook will stop working. 
+    // You can google "Rendered fewer hooks than expected" error.
+  let dbname = params?.dbname;
+
+  const { loading: isQueryLoading, error: queryError, data } = useQuery(
+    getSingleDefs,
+    {
+      variables: {
+        dbname: dbname
+      }
+    }
+  );
+
+  if (queryError) {
+    console.error(queryError);
+  }
+
+  const user = data?.user as User;
 
   const [localUser, setlocalUser] = useState(user);
 
@@ -30,12 +50,19 @@ const UserEdit = ({user}: UserEditProps) => {
           return;
         }
 
-        // update local cache
+        // update getSingle cache
 
         cache.writeQuery({
           query: getSingleDefs,
-          data: { user: localUser},
+          variables: {
+            dbname: localUser.dbname
+          },
+          data: { user: localUser },
         });
+
+        // update getList cache
+
+        // ...
 
       }
     }
@@ -64,8 +91,8 @@ const UserEdit = ({user}: UserEditProps) => {
   };
 
   const onUserNameChange = (e: any) => {
-    setlocalUser({...localUser, name: e.target.value || ""})
-    setUpdateToken({...updateToken, name: e.target.value || ""})
+    setlocalUser({...localUser, name: e.target.value || ""});
+    setUpdateToken({...updateToken, name: e.target.value || ""});
   }
 
 
@@ -96,15 +123,14 @@ const UserEdit = ({user}: UserEditProps) => {
           </footer>
         </form>
 
-        :
-        <article>
-          <h3>Error: user not found</h3>
-        </article>
+        : null
       }
       </main>
 
       <footer>
         <div className="info">
+          {isQueryLoading?<h2>Loading...</h2>:null}
+          {queryError?<h2>Error loading data!</h2>:null}
           {isUpdateExecuting?<h2>Updating...</h2>:null}
           {updateError?<h2>Failed to update.</h2>:null}
         </div>
