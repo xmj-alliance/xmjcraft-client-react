@@ -4,13 +4,10 @@ import { useMutation } from "@apollo/client";
 
 import CUDMessage from "../../models/cudMessage";
 import User from "../../models/user";
-
 import "./create.scss";
 
 const addDefs = loader("../../services/userGraph/addSingle.graphql");
 const getListDefs = loader("../../services/userGraph/getList.graphql");
-
-
 
 const UserCreate = () => {
 
