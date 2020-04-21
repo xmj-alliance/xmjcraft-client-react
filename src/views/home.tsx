@@ -5,7 +5,7 @@ const HomeView = () => {
     <section className="Home">
       Welcome to xmjcraft-client-react!
       <div>
-        It is currently 8:88
+        It is currently {new Date().toLocaleString()}
       </div>
     </section>
   );

@@ -1,12 +1,8 @@
 import React from "react";
-import { loader } from "graphql.macro";
-import { useQuery } from "@apollo/client";
 import { Link } from "wouter";
 
-import User from "../../models/user";
-
+import { useUserList } from "../../services/userService";
 import "./list.scss";
-
 
 // const users: User[] = [
 //   {
@@ -19,49 +15,19 @@ import "./list.scss";
 //   }
 // ];
 
-const getListDefs = loader("../../services/userGraph/getList.graphql");
-
-
-// const PlaceUsers = () => {
-
-//   const { loading, error, data } = useQuery(getListDefs);
-
-//   if (loading) return (
-//     <li><p>Loading...</p></li>
-//   );
-
-//   if (error || data === undefined){
-//     console.error(error);
-//     return (
-//       <li><p>Error!!!</p></li>
-//     );
-//   }
-
-  // return (data.users as User[]).map(({name, dbname}) => (
-  //     <li key={dbname}>
-  //       <div className="userbox">
-  //         <Link href={`/users/${dbname}`} >
-  //           <h2>{name}</h2>
-  //           <p><small>{dbname}</small></p>
-  //         </Link>
-  //       </div>
-  //     </li>
-  //   )
-  // );
-// };
 
 const UserList = () => {
 
-  const { loading: isQueryLoading, error: queryError, data } = useQuery(getListDefs);
+  const { isQueryLoading, queryError, users } = useUserList();
 
   return (
     <div className="UserList">
       <main>
         <ul>
           {
-            data && data.users?
+            users?
 
-            (data.users as User[]).map(({name, dbname}) => (
+            users.map(({name, dbname}) => (
               <li key={dbname}>
                 <div className="userbox">
                   <Link href={`/users/${dbname}`} >

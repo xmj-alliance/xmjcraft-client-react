@@ -1,100 +1,24 @@
 import React, { useState } from "react";
+import { useRoute } from "wouter";
 
+import { useUserUpdate, useUserDetail } from "../../services/userService";
 import User from "../../models/user";
 import "./single.scss";
 import "./edit.scss";
-import { useMutation, useQuery } from "@apollo/client";
-import { loader } from "graphql.macro";
-import CUDMessage from "../../models/cudMessage";
-import { useRoute } from "wouter";
-
-const updateSingleDefs = loader("../../services/userGraph/updateSingle.graphql");
-const getSingleDefs = loader("../../services/userGraph/getSingle.graphql");
-const getListDefs = loader("../../services/userGraph/getList.graphql");
 
 const UserEdit = () => {
 
   const params = useRoute("/users/:dbname")[1];
 
-  // get user data
-    // I will skip checking whether dbname is undefined.
-    // If I write a condition here, the React hook will stop working. 
-    // You can google "Rendered fewer hooks than expected" error.
   let dbname = params?.dbname;
 
-  const { loading: isQueryLoading, error: queryError, data } = useQuery(
-    getSingleDefs,
-    {
-      variables: {
-        dbname: dbname
-      }
-    }
-  );
+  const { isQueryLoading, queryError, user } = useUserDetail(dbname);
 
-  if (queryError) {
-    console.error(queryError);
-  }
-
-  const user = data?.user as User;
-
-  const [localUser, setlocalUser] = useState(user);
+  const [localUser, setlocalUser] = useState(user || {} as User);
 
   const [updateToken, setUpdateToken] = useState({});
 
-  const [updateUser, { loading: isUpdateExecuting, error: updateError }] = useMutation(
-    updateSingleDefs,
-    {
-      update: (cache, response) => {
-        const message = response.data.updateUser as CUDMessage;
-        
-        if (!message.ok) {
-          return;
-        }
-
-        // update getSingle cache
-
-        cache.writeQuery({
-          query: getSingleDefs,
-          variables: {
-            dbname: localUser.dbname
-          },
-          data: { user: localUser },
-        });
-
-        // update getList cache
-
-        let cacheResponse: {users: User[]} | null = null;
-
-        try {
-          cacheResponse = cache.readQuery({ query: getListDefs });
-        } catch (error) {
-          console.log(error);
-        }
-
-        if (!cacheResponse) {
-          return;
-        }
-
-        let userInCacheIndex = cacheResponse.users.findIndex(u => u.dbname === localUser.dbname);
-
-        if (userInCacheIndex < 0) {
-          return;
-        }
-
-        const newUsers = cacheResponse.users.slice();
-        
-        const newData = {
-          users: newUsers
-        }
-
-        cache.writeQuery({
-          query: getListDefs,
-          data: newData,
-        });
-
-      }
-    }
-  );
+  const [updateUser, { loading: isUpdateExecuting, error: updateError }] = useUserUpdate(localUser);
 
   const onOkayClick = async (e: any) => {
     e.preventDefault();

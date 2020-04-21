@@ -1,13 +1,9 @@
 import React, { useState, FormEvent } from "react";
-import { loader } from "graphql.macro";
-import { useMutation } from "@apollo/client";
 
-import CUDMessage from "../../models/cudMessage";
-import User from "../../models/user";
+import { useUserAddition } from "../../services/userService";
 import "./create.scss";
 
-const addDefs = loader("../../services/userGraph/addSingle.graphql");
-const getListDefs = loader("../../services/userGraph/getList.graphql");
+
 
 const UserCreate = () => {
 
@@ -18,33 +14,7 @@ const UserCreate = () => {
 
   const [isAddDialogShown, setIsAddDialogShown] = useState(false);
 
-  const [addUser, { loading: isAddExecuting, error: addError }] = useMutation(
-    addDefs,
-    {
-      update: (cache, response) => {
-        const message = response.data.addUser as CUDMessage;
-        
-        if (!message.ok) {
-          return;
-        }
-
-        // update local cache
-
-        const cacheResponse = cache.readQuery<{users: User[]}>({ query: getListDefs });
-
-        if (!cacheResponse) {
-          return;
-        }
-
-        cache.writeQuery({
-          query: getListDefs,
-          data: { users: cacheResponse.users.concat(newUser)},
-        });
-
-      }
-    }
-
-  );
+  const [addUser, { loading: isAddExecuting, error: addError }] = useUserAddition(newUser);
 
   const onCreateClick = () => {
     setIsAddDialogShown(!isAddDialogShown);

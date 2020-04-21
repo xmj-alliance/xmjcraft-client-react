@@ -1,73 +1,21 @@
 import React, { useState } from "react";
+import { useRoute, useLocation } from "wouter";
 
+import { useUserDetail, useUserDeletion } from "../../services/userService";
 import UserDetail from "../../components/user/detail";
 import UserEdit from "../../components/user/edit";
 import "./detail.scss";
-import { useRoute, useLocation } from "wouter";
-import { loader } from "graphql.macro";
-import { useMutation, useQuery } from "@apollo/client";
-import CUDMessage from "../../models/cudMessage";
-import User from "../../models/user";
 
-const deleteSingleDefs = loader("../../services/userGraph/deleteSingle.graphql");
-const getSingleDefs = loader("../../services/userGraph/getSingle.graphql");
-const getListDefs = loader("../../services/userGraph/getList.graphql");
 
 const UserDetailView = () => {
 
   const [isEditMode, setIsEditMode] = useState(false);
   const params = useRoute("/users/:dbname")[1];
-  const [_, setLocation] = useLocation();
+  const setLocation = useLocation()[1];
 
   let dbname = params?.dbname;
 
-  const [deleteUser, { loading: isDeleteExecuting, error: deleteError }] = useMutation(
-    deleteSingleDefs,
-    {
-      update: (cache, response) => {
-        const message = response.data.deleteUser as CUDMessage;
-        
-        if (!message.ok) {
-          return;
-        }
-        
-        if (!dbname) {
-          return;
-        }
-
-        // update getSingle cache (we have a problem here. not in fact evicted)
-
-        cache.evict(dbname)
-        cache.gc();
-
-        // cache.writeQuery({
-        //   query: getSingleDefs,
-        //   variables: {
-        //     dbname: dbname
-        //   },
-        //   data: {user: null},
-        // });
-
-        // update getList cache
-
-        const cacheResponse = cache.readQuery<{users: User[]}>({ query: getListDefs });
-
-        if (!cacheResponse) {
-          return;
-        }
-
-        const newData = {
-          users: cacheResponse.users.filter((u) => u.dbname !== dbname)
-        }
-
-        cache.writeQuery({
-          query: getListDefs,
-          data: newData,
-        });
-
-      }
-    }
-  );
+  const [deleteUser, { loading: isDeleteExecuting, error: deleteError }] = useUserDeletion(dbname);
 
   const onEditClick = () => {
     setIsEditMode(!isEditMode);
@@ -91,18 +39,7 @@ const UserDetailView = () => {
 
   };
 
-  const { loading: isQueryLoading, error: queryError, data } = useQuery(
-    getSingleDefs,
-    {
-      variables: {
-        dbname: dbname
-      }
-    }
-  );
-
-  if (queryError) {
-    console.error(queryError);
-  }
+  const { isQueryLoading, queryError, user } = useUserDetail(dbname);
 
   return (
     <section className="UserDetail">
@@ -110,7 +47,7 @@ const UserDetailView = () => {
       <header>
 
         {
-          data && data.user && data.user.dbname?
+          user && user.dbname?
 
           <div className="viewControl">
             <button onClick={onEditClick}>Edit</button>
@@ -125,7 +62,7 @@ const UserDetailView = () => {
       <main>
 
         {
-          data && data.user?
+          user?
           <UserDetail />
           : null
         }
