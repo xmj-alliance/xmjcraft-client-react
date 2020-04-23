@@ -9,4 +9,21 @@ section.UserList {
     display: flex;
     flex-wrap: wrap;
   }
+  .create {
+    display: flex;
+    position: relative;
+    align-items: center;
+    padding: 1em;
+    margin: 1em;
+  }
+  .createImaginedModalDialog {
+    position: absolute;
+    border: 3px solid $primary;
+    transform: translateX(100%);
+    right: 50%;
+    padding: 1em;
+    background: $back;
+    z-index: 50;
+  }
+
 }

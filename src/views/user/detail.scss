@@ -11,7 +11,14 @@ section.UserDetail {
   }
 
   .editImaginedModalDialog {
+    position: absolute;
     border: 3px solid $primary;
+    transform: translateX(100%);
+    right: 50%;
+    padding: 1em;
+    background: $back;
+    z-index: 50;
+
     h1 {
       text-align: center;
     }

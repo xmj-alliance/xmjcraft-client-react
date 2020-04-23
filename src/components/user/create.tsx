@@ -3,8 +3,6 @@ import React, { useState, FormEvent } from "react";
 import { useUserAddition } from "../../services/userService";
 import "./create.scss";
 
-
-
 const UserCreate = () => {
 
   const [newUser, setNewUser] = useState({
@@ -12,13 +10,7 @@ const UserCreate = () => {
     name: ""
   });
 
-  const [isAddDialogShown, setIsAddDialogShown] = useState(false);
-
   const [addUser, { loading: isAddExecuting, error: addError }] = useUserAddition(newUser);
-
-  const onCreateClick = () => {
-    setIsAddDialogShown(!isAddDialogShown);
-  }
 
   const onNewUserDBNameChange = (e: any) => {
     setNewUser({...newUser, dbname: e.target.value || ""});
@@ -45,34 +37,29 @@ const UserCreate = () => {
 
   }
 
+  const onCancelButtonClicked = (e: any) => {
+    e.preventDefault();
+    console.log(`Cancelled. Will also close modal dialog in reality.`);
+  }
+
 
   return (
     <div className="userCreate">
-      <button onClick={onCreateClick}>
-        <h2>(+) Create</h2>
-      </button>
-      {
-        isAddDialogShown ?
 
-          (<div className="newUser">
-            <form onSubmit={onNewUserSubmit}>
-              <div className="textInputGroup">
-                <label htmlFor="newUserDBName">dbname</label>
-                <input type="text" id="newUserDBName" value={newUser.dbname} onChange={onNewUserDBNameChange} />
-              </div>
-              <div className="textInputGroup">
-                <label htmlFor="newUserName">Name</label>
-                <input type="text" id="newUserName" value={newUser.name} onChange={onNewUserNameChange} />
-              </div>
-              <footer>
-                <button type="submit">OK</button>
-              </footer>
-            </form>
-
-          </div>)
-          :
-          null
-      }
+      <form onSubmit={onNewUserSubmit}>
+        <div className="textInputGroup">
+          <label htmlFor="newUserDBName">dbname</label>
+          <input type="text" id="newUserDBName" value={newUser.dbname} onChange={onNewUserDBNameChange} />
+        </div>
+        <div className="textInputGroup">
+          <label htmlFor="newUserName">Name</label>
+          <input type="text" id="newUserName" value={newUser.name} onChange={onNewUserNameChange} />
+        </div>
+        <footer>
+          <button type="submit" className="success">OK</button>
+          <button className="danger" onClick={onCancelButtonClicked}>Cancel</button>
+        </footer>
+      </form>
 
       <footer>
         <div className="info">
