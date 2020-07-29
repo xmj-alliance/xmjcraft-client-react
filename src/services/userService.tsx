@@ -168,7 +168,7 @@ export const useUserDeletion = (dbname?: string) => {
 
         // update getSingle cache (we have a problem here. not in fact evicted)
 
-        cache.evict(dbname)
+        // cache.evict(dbname)
         cache.gc();
 
         // cache.writeQuery({

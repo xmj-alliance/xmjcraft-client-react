@@ -1,9 +1,9 @@
 // import React from "react";
-import { ApolloClient, HttpLink, InMemoryCache, defaultDataIdFromObject, InMemoryCacheConfig } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, defaultDataIdFromObject } from '@apollo/client';
 
 const client = new ApolloClient({
   cache: new InMemoryCache({
-    dataIdFromObject: (object) => {
+    dataIdFromObject: (object: any) => {
       switch (object.__typename) {
         case "user": 
           return object.dbname;
@@ -11,7 +11,7 @@ const client = new ApolloClient({
           return defaultDataIdFromObject(object);
       }
     }
-  } as InMemoryCacheConfig),
+  } as any),
   link: new HttpLink({
     uri: "http://localhost:3000/gql",
   }),
